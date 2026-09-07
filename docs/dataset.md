@@ -54,7 +54,17 @@ This supports event-centered analysis rather than analysis of a single isolated 
 ### 3.4 Expert Labels
 
 The expert true/false annotations provide an external reference for evaluating the CLARIS interpretation.
+## 16. Dataset Strategy
 
+VTaC will be used as the **first benchmark dataset** for CLARIS, with ventricular tachycardia as the initial alarm family.
+
+This does not define the overall scope of CLARIS.
+
+CLARIS is intended as a general evidence-reconciliation framework for ICU alarms. VT is being used as the first implementation case because VTaC provides real ICU alarm events, multimodal waveforms, temporal context, and expert annotations.
+
+Following the initial VT implementation, additional ICU alarm or physiological event families will be investigated where suitable datasets and multimodal signals are available.
+
+The purpose of this expansion is to determine whether the CLARIS evidence-reconciliation framework generalizes beyond a single alarm type.
 ---
 
 ## 4. Initial CLARIS Signal Set
