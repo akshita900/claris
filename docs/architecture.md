@@ -97,3 +97,13 @@ Signal Evidence
          ├── Reliability
          ├── Physiological evidence
          └── Relationship
+VT Alarm — Contradicted
+
+The ECG signal was of high quality and showed a rapid
+ventricular rhythm. However, the ABP signal was also of
+high quality and did not show a corresponding pulsatile
+response. The PPG signal was of insufficient quality for
+additional confirmation.
+
+The available multimodal evidence therefore contradicts
+the alarm interpretation.
