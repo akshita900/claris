@@ -1,0 +1,54 @@
+# ==============================
+# Python
+# ==============================
+
+__pycache__/
+*.py[cod]
+*.pyo
+
+.venv/
+venv/
+env/
+
+# ==============================
+# Jupyter
+# ==============================
+
+.ipynb_checkpoints/
+
+# ==============================
+# Raw datasets
+# ==============================
+
+data/raw/*
+!data/raw/.gitkeep
+
+# ==============================
+# Processed data
+# ==============================
+
+data/processed/*
+!data/processed/.gitkeep
+
+# ==============================
+# Extracted CLARIS episodes
+# ==============================
+
+data/episodes/*
+!data/episodes/.gitkeep
+
+# ==============================
+# Generated outputs
+# ==============================
+
+outputs/*
+!outputs/.gitkeep
+
+# ==============================
+# OS files
+# ==============================
+
+.DS_Store
+Thumbs.db
+# Local Phase 0 research papers
+alarm fatigue- research papers/ 
