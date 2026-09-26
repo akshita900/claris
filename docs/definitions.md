@@ -47,3 +47,17 @@ Why multimodal contextual reconstruction is clinically valuable.
 How patient clinical context influences alarm credibility.
 The research gap that CLARIS is designed to address.
 
+---
+
+# Phase 1: CLARIS Alarm Episode Representation
+
+## Definition
+
+For the initial VTaC implementation, a **CLARIS alarm episode** is defined as one VTaC VT alarm event together with its synchronized physiological waveform context.
+
+Each episode retains the complete 6-minute VTaC segment:
+
+```text
+5 minutes before alarm onset
++
+1 minute after alarm onset

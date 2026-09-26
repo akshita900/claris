@@ -95,3 +95,75 @@ PRE-ALARM
 ALARM EVENT
      ↓
 POST-ALARM
+
+# VTaC Dataset
+
+## 1. Dataset Overview
+
+**Dataset:** VTaC — Ventricular Tachycardia Alarm Challenge  
+**Version:** 1.1  
+**Source:** PhysioNet  
+**Role in CLARIS:** Initial dataset for developing and evaluating multimodal ICU alarm reconstruction.
+
+VTaC contains annotated ventricular tachycardia (VT) alarm events collected from ICU bedside monitors. The dataset provides synchronized physiological waveforms around individual alarm events together with expert-derived alarm labels.
+
+CLARIS uses VTaC as the initial experimental foundation for investigating whether an ICU alarm can be interpreted using temporally aligned multimodal physiological evidence rather than relying on a single waveform channel.
+
+---
+
+## 2. Dataset Statistics
+
+The VTaC v1.1 dataset contains:
+
+- **5,037 annotated VT alarm events**
+- **1,441 true alarms**
+- **3,596 false alarms**
+- **17,131 waveform records**
+- **2,157 patients**
+- Waveforms collected from ICUs across three major hospitals in the United States
+
+The annotated event distribution is:
+
+| Decision | Number of events |
+|---|---:|
+| True | 1,441 |
+| False | 3,596 |
+| Total | 5,037 |
+
+---
+
+## 3. Waveform Structure
+
+Each annotated VT alarm event is represented by a **6-minute waveform segment**:
+
+- 5 minutes before alarm onset
+- 1 minute after alarm onset
+- Sampling frequency: **250 Hz**
+- Alarm onset: **300 seconds**
+- Alarm onset sample: **75,000**
+
+Therefore, each 6-minute waveform contains:
+
+**360 × 250 = 90,000 samples per signal**
+
+The waveform records contain ECG signals together with one or more pulsatile waveforms, including:
+
+- ECG
+- Photoplethysmography (PPG/PLETH)
+- Arterial blood pressure (ABP), when available
+
+---
+
+## 4. Dataset Organization
+
+The VTaC v1.1 top-level structure contains:
+
+```text
+annotated_waveforms/
+waveforms/
+LICENSE.txt
+RECORDS
+SHA256SUMS.txt
+benchmark_data_split.csv
+event_label_per_annotator.csv
+event_labels.csv
