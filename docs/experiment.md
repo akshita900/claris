@@ -215,3 +215,173 @@ Generated locally:
 `outputs/003c13_0115_signal_quality.csv`
 
 The `outputs/` directory remains ignored by Git except for `.gitkeep`.
+
+## 2026-09-27 — Phase 1: Batch Episode Loading and Signal-Quality Integration
+
+### Objective
+
+Extend the Phase 1 episode pipeline from a single manually constructed VTaC episode to a reusable batch-loading workflow.
+
+The batch workflow should:
+
+1. Read VTaC event metadata from `event_labels.csv`.
+2. Identify waveform records that are available locally.
+3. Construct `CLARISEpisode` objects using the reusable episode loader.
+4. Track unavailable waveform records explicitly.
+5. Apply the existing signal-integrity feature calculation to each available signal.
+
+### Batch Episode Loading
+
+A reusable function, `load_available_claris_episodes()`, was added to `src/episode.py`.
+
+The function accepts:
+
+- the VTaC event table
+- the local VTaC raw-data directory
+
+It returns:
+
+- successfully loaded `CLARISEpisode` objects
+- a list of event IDs whose waveform files are not locally available
+
+The full VTaC event table contains 5,037 annotated events. At this stage, only one waveform event (`003c13_0115`) is locally available.
+
+The batch loader therefore successfully loaded:
+
+- 1 waveform episode
+
+and identified:
+
+- 5,036 events without locally available waveform files.
+
+This is expected because the full VTaC waveform archive has not been downloaded.
+
+### Episode Structure Validation
+
+Automated structural checks were applied to the loaded episode.
+
+The checks verified that:
+
+- waveform sample count matches `n_samples`
+- waveform channel count matches the signal list
+- time-axis length matches `n_samples`
+- alarm sample corresponds to `t = 0`
+- duration matches `n_samples / sampling_frequency`
+
+All checks passed for the locally available episode.
+
+### Signal-Quality Feature Integration
+
+The existing `calculate_signal_quality_features()` function from `src/signal_quality.py` was applied to every signal in the loaded episode.
+
+The current episode contains:
+
+- II
+- aVR
+- V
+- PLETH
+
+The calculated features include:
+
+- NaN count
+- Inf count
+- repeated-sample fraction
+- longest repeated run
+- longest repeated duration
+- local mean around the alarm
+- local standard deviation around the alarm
+- local range around the alarm
+- minimum-value count
+- maximum-value count
+
+These outputs remain descriptive signal-integrity measurements. They do not constitute a clinical signal-quality classification or an alarm credibility decision.
+
+### Interpretation Boundary
+
+At this stage, CLARIS can:
+
+- represent an alarm-centered physiological episode
+- preserve available multimodal waveform data
+- distinguish locally available from unavailable waveform records
+- calculate basic signal-integrity features
+
+CLARIS does not yet assign:
+
+- signal quality labels
+- physiological evidence labels
+- alarm credibility
+- SUPPORTS / CONTRADICTS / INSUFFICIENT decisions
+
+Those components remain part of later phases.
+
+### Current Status
+
+The Phase 1 ingestion pathway is now validated for the locally available VTaC waveform.
+
+Next work will focus on systematic batch validation and preprocessing across a larger set of locally available waveform records.
+### Alarm-Window Visualization
+
+A synchronized ±5-second visualization was generated for the locally available VTaC episode `003c13_0115`.
+
+The visualization displayed all available signals on a shared alarm-centered time axis:
+
+- ECG II
+- ECG aVR
+- ECG V
+- PLETH
+
+The alarm onset was represented at `t = 0`.
+
+The visualization confirms that the episode representation preserves synchronized multimodal waveform context while retaining the individual signal scales and units.
+
+No clinical alarm-credibility conclusion was made from visual inspection. The visualization is being used for data inspection and pipeline validation only.
+### Conservative Preprocessing Contract
+
+A first preprocessing validation layer was implemented in `src/preprocessing.py`.
+
+The current preprocessing layer performs structural validation without modifying the waveform.
+
+Validation checks include:
+
+- waveform is represented as a 2D samples × signals array
+- waveform sample count matches the episode metadata
+- sampling frequency is greater than zero
+- waveform values are finite
+- NaN and Inf counts are reported
+
+The validation function returns measurable properties and does not assign a clinical signal-quality label.
+
+No filtering, normalization, resampling, artifact removal, or waveform modification is currently performed.
+
+This conservative approach preserves the original VTaC waveform as the primary physiological evidence while allowing derived processing to be introduced later when justified by the requirements of physiological evidence extraction.
+### Batch Episode Validation
+
+The structural validation layer was applied to all CLARIS episodes currently available locally.
+
+For each loaded episode, the validation records:
+
+- record and event identity
+- final VTaC decision
+- sample count
+- signal count
+- sampling frequency
+- waveform shape validity
+- finite-value status
+- NaN count
+- Inf count
+
+The resulting validation table was saved locally as:
+
+`outputs/batch_episode_validation.csv`
+
+At the current development stage, the local waveform collection contains one VTaC event, so the validation table currently contains one episode.
+
+The generated CSV is treated as a derived local output and is excluded from version control.
+
+### Phase 1 Ingestion Status
+
+The current Phase 1 ingestion pipeline has been tested through:
+
+VTaC event metadata → local waveform availability check → CLARIS episode construction → structural validation → signal-integrity feature calculation.
+
+The pipeline preserves the original waveform and does not currently perform destructive preprocessing.

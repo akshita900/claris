@@ -72,3 +72,47 @@ def load_claris_episode(
         units=record.units,
         decision=decision,
     )
+def load_available_claris_episodes(
+    event_table,
+    raw_dir: str,
+) -> tuple[list[CLARISEpisode], list[str]]:
+    """
+    Load all VTaC episodes whose waveform files are available locally.
+
+    Returns:
+        episodes: successfully loaded CLARIS episodes
+        missing_events: event IDs whose waveform files are not available
+    """
+
+    from pathlib import Path
+
+    raw_dir = Path(raw_dir)
+
+    episodes = []
+    missing_events = []
+
+    for _, row in event_table.iterrows():
+        record_id = row["record"]
+        event_id = row["event"]
+        decision = row["decision"]
+
+        record_path = raw_dir / event_id
+
+        if not record_path.with_suffix(".hea").exists():
+            missing_events.append(event_id)
+            continue
+
+        if not record_path.with_suffix(".dat").exists():
+            missing_events.append(event_id)
+            continue
+
+        episode = load_claris_episode(
+            record_path=str(record_path),
+            record_id=record_id,
+            event=event_id,
+            decision=decision,
+        )
+
+        episodes.append(episode)
+
+    return episodes, missing_events
