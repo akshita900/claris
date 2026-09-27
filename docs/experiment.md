@@ -385,3 +385,27 @@ The current Phase 1 ingestion pipeline has been tested through:
 VTaC event metadata → local waveform availability check → CLARIS episode construction → structural validation → signal-integrity feature calculation.
 
 The pipeline preserves the original waveform and does not currently perform destructive preprocessing.
+## 2026-09-27 — Phase 1: Multi-Configuration Waveform Validation
+
+A second locally available VTaC waveform was added to test the CLARIS episode pipeline on a different physiological channel configuration.
+
+The first locally validated episode, `003c13_0115`, contains:
+
+- ECG: II, aVR, V
+- PLETH
+
+The second episode, `004bad_0015`, contains:
+
+- ECG: I, II, aVR, V
+- PLETH
+- ABP
+
+Both episodes use a sampling frequency of 250 Hz and contain 90,000 samples representing 360 seconds of waveform data, with the alarm onset aligned to sample 75,000 (300 seconds).
+
+The reusable `load_claris_episode()` constructor successfully loaded both configurations, preserving waveform data, signal names, units, timing, and alarm metadata.
+
+Structural validation using `validate_episode_waveform()` passed for both episodes. The ABP-containing episode had the expected two-dimensional waveform structure, correct sample count, valid sampling frequency, and no NaN or infinite values.
+
+This confirms that the Phase 1 episode representation and structural validation pipeline can accommodate at least two observed VTaC waveform configurations rather than depending on a single fixed channel set.
+
+This validation does not establish clinical signal quality or physiological validity. It establishes only that the current CLARIS data representation and validation pipeline correctly handles these waveform configurations.
